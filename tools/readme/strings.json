@@ -1,0 +1,56 @@
+{
+  "ru": {
+    "hero": {
+      "alt": "Okto Calc — красивый калькулятор для Android с функциями Google Калькулятора",
+      "title": ["Красивый калькулятор", "в духе *Okto*"],
+      "sub": ["Как Google Калькулятор: проценты, скобки,", "инженерные функции и история. Без рекламы."],
+      "cards": [["Как у Google", "Все функции"], ["Четыре темы", "И своя палитра"], ["Офлайн", "0 разрешений"], ["Бесплатно", "Без рекламы"]]
+    },
+    "buttons": { "android": "Скачать для Android", "whatsNew": "Что нового" },
+    "features": {
+      "alt": "Возможности: вычисления, инженерные функции, история, удобство", "chip": "Возможности", "title": "Всё как в Google — *и красивее*",
+      "items": [
+        ["Вычисления", ["Проценты как в Google: 50 + 10% = 55.", "Скобки, степени, корень, факториал."]],
+        ["Инженерные", ["sin, cos, tan и обратные, ln, log, π, e.", "Градусы и радианы одним касанием."]],
+        ["История", ["Все вычисления хранятся на телефоне.", "Тап по строке — вставить результат."]],
+        ["Удобство", ["Результат виден ещё во время набора.", "Долгое нажатие на табло — копировать."]]
+      ]
+    },
+    "themes": {
+      "alt": "Темы: Цветная, Okto, Okto Light и Своя", "chip": "Темы", "title": "Четыре темы — *и своя палитра*",
+      "cols": [["Цветная", "Мягкие тона"], ["Okto", "Графит и объём"], ["Okto Light", "Светлая раскладка"], ["Своя", "Любой оттенок"]],
+      "accents": "Оттенок и насыщенность — ползунками"
+    },
+    "numbers": {
+      "alt": "В цифрах: 1.6 МБ, 0 разрешений, 0 рекламы, 4 темы, 15 инженерных клавиш", "chip": "В цифрах", "title": "Лёгкий *и честный*",
+      "items": [["1.6", " МБ", ["размер", "приложения"]], ["0", "", ["разрешений", "и нет сети"]], ["0", "", ["рекламы", "и трекеров"]], ["4", "", ["темы", "оформления"]], ["15", "", ["инженерных", "клавиш"]]]
+    }
+  },
+  "en": {
+    "hero": {
+      "alt": "Okto Calc — a beautiful Android calculator with Google Calculator features",
+      "title": ["A beautiful calculator", "in the *Okto* style"],
+      "sub": ["Like Google Calculator: percent, brackets,", "scientific functions and history. No ads."],
+      "cards": [["Like Google", "All the features"], ["Four themes", "Plus your own"], ["Offline", "0 permissions"], ["Free", "No ads"]]
+    },
+    "buttons": { "android": "Download for Android", "whatsNew": "What’s new" },
+    "features": {
+      "alt": "Features: calculations, scientific functions, history, convenience", "chip": "Features", "title": "Everything Google has — *only prettier*",
+      "items": [
+        ["Calculations", ["Percent like Google: 50 + 10% = 55.", "Brackets, powers, root, factorial."]],
+        ["Scientific", ["sin, cos, tan and inverses, ln, log, π, e.", "Degrees and radians in one tap."]],
+        ["History", ["Every calculation stays on your phone.", "Tap a row to reuse the result."]],
+        ["Convenience", ["The result shows up while you type.", "Long-press the display to copy."]]
+      ]
+    },
+    "themes": {
+      "alt": "Themes: Color, Okto, Okto Light and Custom", "chip": "Themes", "title": "Four themes — *and your own palette*",
+      "cols": [["Color", "Soft tonal colors"], ["Okto", "Graphite and depth"], ["Okto Light", "Light layout"], ["Custom", "Any hue you like"]],
+      "accents": "Hue and saturation with sliders"
+    },
+    "numbers": {
+      "alt": "By the numbers: 1.6 MB, 0 permissions, 0 ads, 4 themes, 15 scientific keys", "chip": "By the numbers", "title": "Light *and honest*",
+      "items": [["1.6", " MB", ["app", "size"]], ["0", "", ["permissions,", "no network"]], ["0", "", ["ads", "and trackers"]], ["4", "", ["visual", "themes"]], ["15", "", ["scientific", "keys"]]]
+    }
+  }
+}

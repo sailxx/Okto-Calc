@@ -1,0 +1,8 @@
+{
+  "name": "okto-calc-readme",
+  "private": true,
+  "type": "module",
+  "description": "Генератор SVG-баннеров README",
+  "scripts": { "build": "node build.mjs" },
+  "devDependencies": { "subset-font": "^2.4.0" }
+}
