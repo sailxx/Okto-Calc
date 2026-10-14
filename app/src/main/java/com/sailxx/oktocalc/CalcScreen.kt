@@ -53,28 +53,27 @@ import androidx.compose.ui.input.pointer.pointerInput
 
 private const val GROUP_SEP = " "
 
-/** Малая «таблетка» на табло: DEG/RAD, f(x), История, Настройки. */
+/** Малая клавиша на табло: DEG/RAD, f(x), История, Настройки. */
 @Composable
 fun Chip(text: String, modifier: Modifier = Modifier, active: Boolean = false, onClick: () -> Unit) {
-    val t = T
-    val c = t.c
+    val c = C
     val bg = if (active) c.wellInk else c.wellGhost
     val fg = if (active) c.well else c.wellDim
     Box(
         modifier
-            .clip((if (t.okto) RoundedCornerShape(8.dp) else RoundedCornerShape(50)))
+            .clip(RoundedCornerShape(8.dp))
             .background(bg)
             .clickable(onClick = onClick)
             .padding(horizontal = 11.dp, vertical = 6.dp),
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            if (t.okto) text.uppercase() else text,
+            text.uppercase(),
             color = fg,
-            fontFamily = if (t.okto) JbMono else Nunito,
-            fontWeight = if (t.okto) FontWeight.SemiBold else FontWeight.ExtraBold,
-            fontSize = if (t.okto) 11.sp else 13.sp,
-            letterSpacing = if (t.okto) 0.8.sp else 0.sp,
+            fontFamily = JbMono,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 11.sp,
+            letterSpacing = 0.8.sp,
             maxLines = 1,
         )
     }
@@ -82,7 +81,6 @@ fun Chip(text: String, modifier: Modifier = Modifier, active: Boolean = false, o
 
 @Composable
 private fun DisplayLine(text: String, size: Float, color: androidx.compose.ui.graphics.Color, bold: Boolean) {
-    val t = T
     val sz by animateFloatAsState(size, label = "sz")
     val scroll = rememberScrollState()
     LaunchedEffect(text, scroll.maxValue) { scroll.scrollTo(scroll.maxValue) }
@@ -91,8 +89,8 @@ private fun DisplayLine(text: String, size: Float, color: androidx.compose.ui.gr
             text,
             modifier = Modifier.horizontalScroll(scroll),
             color = color,
-            fontFamily = if (t.okto) JbMono else Nunito,
-            fontWeight = if (bold) (if (t.okto) FontWeight.Medium else FontWeight.ExtraBold) else FontWeight.SemiBold,
+            fontFamily = JbMono,
+            fontWeight = if (bold) FontWeight.Medium else FontWeight.SemiBold,
             fontSize = sz.sp,
             lineHeight = (sz * 1.15f).sp,
             maxLines = 1,
@@ -102,10 +100,8 @@ private fun DisplayLine(text: String, size: Float, color: androidx.compose.ui.gr
     }
 }
 
-private fun bigSize(len: Int, okto: Boolean): Float = if (okto) when {
+private fun bigSize(len: Int): Float = when {
     len <= 8 -> 54f; len <= 11 -> 42f; len <= 15 -> 33f; else -> 26f
-} else when {
-    len <= 9 -> 60f; len <= 13 -> 46f; len <= 18 -> 36f; else -> 29f
 }
 
 @Composable
@@ -120,11 +116,10 @@ fun Display(
     onSettings: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val t = T
-    val c = t.c
+    val c = C
     val ctx = LocalContext.current
-    val shape = RoundedCornerShape(if (t.okto) 20.dp else 32.dp)
-    val small = if (t.okto) 17f else 21f
+    val shape = RoundedCornerShape(20.dp)
+    val small = 17f
 
     val main: String
     val mainBig: Boolean
@@ -150,7 +145,7 @@ fun Display(
         modifier
             .clip(shape)
             .background(c.well)
-            .then(if (t.okto) Modifier.border(BorderStroke(1.dp, c.wellEdge), shape) else Modifier)
+            .border(BorderStroke(1.dp, c.wellEdge), shape)
             .pointerInput(state.expr, state.evaluated) {
                 detectTapGestures(onLongPress = {
                     val text = if (state.evaluated) state.expr else state.preview ?: state.expr
@@ -174,9 +169,9 @@ fun Display(
         // Выражение — крупно, пока набираем; после «=» крупным становится результат.
         if (state.evaluated) {
             DisplayLine(second, small, c.wellDim, false)
-            DisplayLine(main, bigSize(main.length, t.okto), c.wellInk, true)
+            DisplayLine(main, bigSize(main.length), c.wellInk, true)
         } else {
-            DisplayLine(main, bigSize(main.length, t.okto), c.wellInk, true)
+            DisplayLine(main, bigSize(main.length), c.wellInk, true)
             DisplayLine(second.ifEmpty { " " }, small, secondColor, false)
         }
     }

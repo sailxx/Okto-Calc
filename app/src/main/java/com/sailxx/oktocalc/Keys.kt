@@ -1,7 +1,6 @@
 package com.sailxx.oktocalc
 
 import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -41,29 +40,14 @@ import androidx.compose.ui.unit.sp
 
 enum class KeyKind { DIGIT, OP, SCI, EQ, CLEAR, DEL }
 
-private fun colorsFor(kind: KeyKind, t: AppTheme): Pair<Color, Color> {
-    val c = t.c
-    return if (!t.okto) when (kind) {
-        KeyKind.DIGIT -> c.surface to c.onBg
-        KeyKind.OP -> c.container to c.onContainer
-        KeyKind.SCI -> c.surfaceHi to c.onBg
-        KeyKind.EQ -> c.primary to c.onPrimary
-        KeyKind.CLEAR -> c.accent2 to c.onAccent2
-        KeyKind.DEL -> c.surfaceHi to c.onBg
-    } else when (kind) {
-        KeyKind.DIGIT -> c.key to c.keyInk
-        KeyKind.OP -> c.key to c.primary
-        KeyKind.SCI -> c.key to c.keyInk
-        KeyKind.EQ -> c.primary to c.onPrimary
-        KeyKind.CLEAR -> c.key to c.danger
-        KeyKind.DEL -> c.key to c.keyInk
-    }
+private fun colorsFor(kind: KeyKind, c: Palette): Pair<Color, Color> = when (kind) {
+    KeyKind.DIGIT, KeyKind.SCI, KeyKind.DEL -> c.key to c.keyInk
+    KeyKind.OP -> c.key to c.primary
+    KeyKind.EQ -> c.primary to c.onPrimary
+    KeyKind.CLEAR -> c.key to c.danger
 }
 
-/**
- * Скруглённая клавиша. «Цветная» — тональная заливка, при нажатии форма из круга «сжимается» в скруглённый квадрат.
- * Okto — объёмная клавиша: тёмная кромка снизу и блик сверху, при нажатии вдавливается.
- */
+/** Объёмная клавиша Okto: тёмная кромка снизу и тонкий блик сверху; при нажатии вдавливается. */
 @Composable
 fun CalcKey(
     label: String,
@@ -76,22 +60,20 @@ fun CalcKey(
     icon: (@Composable (Color) -> Unit)? = null,
     onTap: () -> Unit,
 ) {
-    val t = T
-    val c = t.c
+    val c = C
     var pressed by remember { mutableStateOf(false) }
     val tap by rememberUpdatedState(onTap)
     val long by rememberUpdatedState(onLong)
 
-    val (bg0, fg0) = colorsFor(kind, t)
+    val (bg0, fg0) = colorsFor(kind, c)
     val bg = if (active) c.primary else bg0
     val fg = if (active) c.onPrimary else fg0
 
-    val pct by animateIntAsState(if (pressed) 30 else 50, tween(120), label = "pct")
     val rad by animateDpAsState(
         if (pressed) (if (small) 8.dp else 12.dp) else (if (small) 14.dp else 22.dp), tween(100), label = "rad",
     )
     val edge by animateDpAsState(if (pressed) 0.dp else 3.dp, tween(80), label = "edge")
-    val shape = if (t.okto) RoundedCornerShape(rad) else RoundedCornerShape(pct)
+    val shape = RoundedCornerShape(rad)
 
     val gestures = Modifier
         .semantics {
@@ -111,32 +93,23 @@ fun CalcKey(
         if (icon != null) icon(fg) else Text(
             label,
             color = fg,
-            fontFamily = if (t.okto) JbMono else Nunito,
-            fontWeight = if (t.okto) FontWeight.Medium else FontWeight.ExtraBold,
-            fontSize = when {
-                small && t.okto -> 13.sp
-                small -> 16.sp
-                t.okto -> 26.sp
-                else -> 30.sp
-            },
+            fontFamily = JbMono,
+            fontWeight = FontWeight.Medium,
+            fontSize = if (small) 13.sp else 26.sp,
             maxLines = 1,
         )
     }
 
-    if (t.okto) {
-        Box(modifier.clip(shape).background(c.keyEdge).then(gestures)) {
-            Box(
-                Modifier
-                    .fillMaxSize()
-                    .padding(bottom = edge)
-                    .clip(shape)
-                    .background(bg)
-                    .drawBehind { drawRect(c.keyHi, size = Size(size.width, 1.dp.toPx())) },
-                contentAlignment = Alignment.Center,
-            ) { content() }
-        }
-    } else {
-        Box(modifier.clip(shape).background(bg).then(gestures), contentAlignment = Alignment.Center) { content() }
+    Box(modifier.clip(shape).background(c.keyEdge).then(gestures)) {
+        Box(
+            Modifier
+                .fillMaxSize()
+                .padding(bottom = edge)
+                .clip(shape)
+                .background(bg)
+                .drawBehind { drawRect(c.keyHi, size = Size(size.width, 1.dp.toPx())) },
+            contentAlignment = Alignment.Center,
+        ) { content() }
     }
 }
 

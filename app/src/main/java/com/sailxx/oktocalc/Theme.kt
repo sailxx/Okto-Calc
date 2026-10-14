@@ -28,17 +28,13 @@ private fun variable(res: Int, vararg weights: Int) = FontFamily(
     weights.map { Font(res, FontWeight(it), variationSettings = FontVariation.Settings(FontVariation.weight(it))) },
 )
 
-val Nunito = variable(R.font.nunito, 400, 500, 600, 700, 800, 900)
 val Golos = variable(R.font.golos, 400, 500, 600, 700, 800)
 val JbMono = variable(R.font.jbmono, 400, 500, 600, 700, 800)
 
 // ---------- Настройки ----------
 
 /** Какая тема выбрана. */
-enum class ThemeKind { COLOR, OKTO, OKTO_LIGHT, CUSTOM }
-
-/** Раскладка: «Цветная» (мягкие тональные клавиши) или «Okto» (табло и объёмные клавиши). */
-enum class UiStyle { TONAL, OKTO }
+enum class ThemeKind { OKTO, OKTO_LIGHT }
 
 enum class Lang {
     RU, EN;
@@ -49,11 +45,7 @@ enum class Lang {
 }
 
 data class Settings(
-    val kind: ThemeKind = ThemeKind.COLOR,
-    val style: UiStyle = UiStyle.TONAL,
-    val dark: Boolean = false,
-    val hue: Float = 255f,
-    val sat: Float = 0.7f,
+    val kind: ThemeKind = ThemeKind.OKTO,
     val lang: Lang = Lang.system(),
     val deg: Boolean = true,
     val haptics: Boolean = true,
@@ -63,11 +55,7 @@ class SettingsStore(context: Context) {
     private val prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
 
     fun load() = Settings(
-        kind = enumOr(prefs.getString("kind", null), ThemeKind.COLOR),
-        style = enumOr(prefs.getString("style", null), UiStyle.TONAL),
-        dark = prefs.getBoolean("dark", false),
-        hue = prefs.getFloat("hue", 255f),
-        sat = prefs.getFloat("sat", 0.7f),
+        kind = enumOr(prefs.getString("kind", null), ThemeKind.OKTO),
         lang = enumOr(prefs.getString("lang", null), Lang.system()),
         deg = prefs.getBoolean("deg", true),
         haptics = prefs.getBoolean("haptics", true),
@@ -75,9 +63,8 @@ class SettingsStore(context: Context) {
 
     fun save(s: Settings) {
         prefs.edit()
-            .putString("kind", s.kind.name).putString("style", s.style.name)
-            .putBoolean("dark", s.dark).putFloat("hue", s.hue).putFloat("sat", s.sat)
-            .putString("lang", s.lang.name).putBoolean("deg", s.deg).putBoolean("haptics", s.haptics)
+            .putString("kind", s.kind.name)
+                        .putString("lang", s.lang.name).putBoolean("deg", s.deg).putBoolean("haptics", s.haptics)
             .apply()
     }
 
@@ -85,7 +72,7 @@ class SettingsStore(context: Context) {
         enumValues<E>().firstOrNull { it.name == name } ?: default
 }
 
-// ---------- Палитра (та же, что в Okto Notes) ----------
+// ---------- Палитра Okto ----------
 
 @Immutable
 data class Palette(
@@ -106,19 +93,6 @@ fun hsl(h: Float, s: Float, l: Float, a: Float = 1f): Color {
     val argb = ColorUtils.HSLToColor(floatArrayOf(((h % 360f) + 360f) % 360f, s.coerceIn(0f, 1f), l.coerceIn(0f, 1f)))
     return Color(argb).copy(alpha = a)
 }
-
-val ColorPalette = Palette(
-    dark = false,
-    bg = Color(0xFFF7F2FA), onBg = Color(0xFF1D1B20), muted = Color(0xFF49454F),
-    surface = Color.White, surfaceHi = Color(0xFFECE6F0), outline = Color(0xFF79747E),
-    primary = Color(0xFF4A2FC0), onPrimary = Color.White,
-    container = Color(0xFFE8DEFF), onContainer = Color(0xFF21005D),
-    accent2 = Color(0xFFFFD8E4), onAccent2 = Color(0xFF31111D),
-    well = Color(0xFFE8DEFF), wellInk = Color(0xFF21005D), wellDim = Color(0xFF4F4566),
-    wellGhost = Color(0x1421005D), wellEdge = Color.Transparent,
-    key = Color(0xFFECE6F0), keyInk = Color(0xFF1D1B20), keyEdge = Color(0xFFCAC4D0), keyHi = Color.Transparent,
-    danger = Color(0xFFB3261E),
-)
 
 val OktoPalette = Palette(
     dark = true,
@@ -146,89 +120,19 @@ val OktoLightPalette = Palette(
     danger = Color(0xFFD33A3F),
 )
 
-fun tonalPalette(h: Float, s: Float, dark: Boolean): Palette {
-    val ps = s.coerceIn(0f, 1f)
-    return if (!dark) Palette(
-        dark = false,
-        bg = hsl(h, 0.45f * ps, 0.97f), onBg = hsl(h, 0.12f * ps, 0.12f), muted = hsl(h, 0.08f * ps, 0.30f),
-        surface = Color.White, surfaceHi = hsl(h, 0.25f * ps, 0.92f), outline = hsl(h, 0.06f * ps, 0.48f),
-        primary = hsl(h, maxOf(0.45f, 0.8f * ps), 0.40f), onPrimary = Color.White,
-        container = hsl(h, 0.85f * ps, 0.91f), onContainer = hsl(h, 0.65f * ps, 0.18f),
-        accent2 = hsl(h + 60f, 0.85f * ps, 0.90f), onAccent2 = hsl(h + 60f, 0.6f * ps, 0.16f),
-        well = hsl(h, 0.85f * ps, 0.91f), wellInk = hsl(h, 0.65f * ps, 0.18f), wellDim = hsl(h, 0.15f * ps, 0.36f),
-        wellGhost = hsl(h, 0.65f * ps, 0.18f, 0.08f), wellEdge = Color.Transparent,
-        key = hsl(h, 0.25f * ps, 0.92f), keyInk = hsl(h, 0.12f * ps, 0.12f), keyEdge = hsl(h, 0.12f * ps, 0.80f),
-        keyHi = Color.Transparent, danger = Color(0xFFB3261E),
-    ) else Palette(
-        dark = true,
-        bg = hsl(h, 0.12f * ps, 0.075f), onBg = hsl(h, 0.15f * ps, 0.90f), muted = hsl(h, 0.08f * ps, 0.68f),
-        surface = hsl(h, 0.12f * ps, 0.13f), surfaceHi = hsl(h, 0.10f * ps, 0.18f), outline = hsl(h, 0.06f * ps, 0.57f),
-        primary = hsl(h, maxOf(0.5f, 0.85f * ps), 0.80f), onPrimary = hsl(h, 0.65f * ps, 0.20f),
-        container = hsl(h, 0.35f * ps, 0.30f), onContainer = hsl(h, 0.85f * ps, 0.92f),
-        accent2 = hsl(h + 60f, 0.35f * ps, 0.30f), onAccent2 = hsl(h + 60f, 0.8f * ps, 0.90f),
-        well = hsl(h, 0.35f * ps, 0.30f), wellInk = hsl(h, 0.85f * ps, 0.92f), wellDim = hsl(h, 0.3f * ps, 0.78f),
-        wellGhost = hsl(h, 0.85f * ps, 0.92f, 0.10f), wellEdge = Color.Transparent,
-        key = hsl(h, 0.10f * ps, 0.18f), keyInk = hsl(h, 0.15f * ps, 0.90f), keyEdge = Color.Black,
-        keyHi = Color.Transparent, danger = Color(0xFFF2B8B5),
-    )
-}
-
-fun oktoPalette(h: Float, s: Float, dark: Boolean): Palette {
-    val ps = s.coerceIn(0f, 1f)
-    return if (dark) Palette(
-        dark = true,
-        bg = hsl(h, 0.18f * ps, 0.08f), onBg = hsl(h, 0.15f * ps, 0.91f), muted = hsl(h, 0.08f * ps, 0.58f),
-        surface = hsl(h, 0.15f * ps, 0.11f), surfaceHi = hsl(h, 0.14f * ps, 0.15f), outline = hsl(h, 0.14f * ps, 0.17f),
-        primary = if (ps < 0.05f) Color(0xFFEDEDED) else hsl(h, maxOf(0.7f, ps), 0.60f),
-        onPrimary = if (ps < 0.05f) Color(0xFF141414) else hsl(h, 0.6f, 0.10f),
-        container = hsl(h, 0.14f * ps, 0.15f), onContainer = hsl(h, 0.15f * ps, 0.91f),
-        accent2 = hsl(h, 0.14f * ps, 0.15f), onAccent2 = hsl(h, 0.15f * ps, 0.91f),
-        well = hsl(h, 0.25f * ps, 0.04f),
-        wellInk = if (ps < 0.05f) Color(0xFFF2F2F2) else hsl(h, maxOf(0.75f, ps), 0.66f),
-        wellDim = hsl(h, 0.18f * ps, 0.52f),
-        wellGhost = if (ps < 0.05f) Color(0x0FFFFFFF) else hsl(h, 0.75f, 0.66f, 0.08f),
-        wellEdge = hsl(h, 0.2f * ps, 0.10f),
-        key = hsl(h, 0.14f * ps, 0.15f), keyInk = hsl(h, 0.15f * ps, 0.91f), keyEdge = Color.Black,
-        keyHi = Color(0x10FFFFFF), danger = Color(0xFFEF5A5F),
-    ) else Palette(
-        dark = false,
-        bg = hsl(h, 0.22f * ps, 0.89f), onBg = hsl(h, 0.30f * ps, 0.12f), muted = hsl(h, 0.12f * ps, 0.34f),
-        surface = hsl(h, 0.20f * ps, 0.85f), surfaceHi = hsl(h, 0.25f * ps, 0.95f), outline = hsl(h, 0.18f * ps, 0.76f),
-        primary = hsl(h, 0.55f * ps, 0.28f), onPrimary = Color.White,
-        container = hsl(h, 0.25f * ps, 0.95f), onContainer = hsl(h, 0.30f * ps, 0.12f),
-        accent2 = hsl(h, 0.25f * ps, 0.95f), onAccent2 = hsl(h, 0.30f * ps, 0.12f),
-        well = hsl(h, 0.18f * ps, 0.15f), wellInk = hsl(h, 0.55f * ps, 0.86f), wellDim = hsl(h, 0.15f * ps, 0.60f),
-        wellGhost = hsl(h, 0.55f * ps, 0.86f, 0.07f), wellEdge = Color(0x66000000),
-        key = hsl(h, 0.30f * ps, 0.96f), keyInk = hsl(h, 0.30f * ps, 0.12f), keyEdge = hsl(h, 0.18f * ps, 0.68f),
-        keyHi = Color(0xCCFFFFFF), danger = Color(0xFFD33A3F),
-    )
-}
-
 // ---------- Тема приложения ----------
 
 @Immutable
-class AppTheme(val style: UiStyle, val c: Palette) {
-    val okto: Boolean get() = style == UiStyle.OKTO
-    val font: FontFamily get() = if (okto) Golos else Nunito
+class AppTheme(val c: Palette) {
+    val font: FontFamily get() = Golos
 }
 
-val LocalAppTheme = staticCompositionLocalOf { AppTheme(UiStyle.TONAL, ColorPalette) }
-
-val T: AppTheme
-    @Composable @ReadOnlyComposable get() = LocalAppTheme.current
+val LocalAppTheme = staticCompositionLocalOf { AppTheme(OktoPalette) }
 
 val C: Palette
     @Composable @ReadOnlyComposable get() = LocalAppTheme.current.c
 
-fun buildTheme(s: Settings): AppTheme = when (s.kind) {
-    ThemeKind.COLOR -> AppTheme(UiStyle.TONAL, ColorPalette)
-    ThemeKind.OKTO -> AppTheme(UiStyle.OKTO, OktoPalette)
-    ThemeKind.OKTO_LIGHT -> AppTheme(UiStyle.OKTO, OktoLightPalette)
-    ThemeKind.CUSTOM -> when (s.style) {
-        UiStyle.TONAL -> AppTheme(UiStyle.TONAL, tonalPalette(s.hue, s.sat, s.dark))
-        UiStyle.OKTO -> AppTheme(UiStyle.OKTO, oktoPalette(s.hue, s.sat, s.dark))
-    }
-}
+fun buildTheme(s: Settings): AppTheme = AppTheme(if (s.kind == ThemeKind.OKTO) OktoPalette else OktoLightPalette)
 
 @Composable
 fun OktoTheme(theme: AppTheme, content: @Composable () -> Unit) {
@@ -261,16 +165,8 @@ class Strings(val lang: Lang) {
     val errFormat get() = t("Ошибка формата", "Format error")
     val errDomain get() = t("Недопустимое значение", "Invalid input")
     val theme get() = t("Тема", "Theme")
-    val themeColor get() = t("Цветная", "Color")
-    val themeOkto get() = "Okto"
-    val themeOktoLight get() = "Okto Light"
-    val themeCustom get() = t("Своя", "Custom")
-    val layout get() = t("Раскладка", "Layout")
-    val layoutTonal get() = t("Цветная", "Color")
-    val layoutOkto get() = "Okto"
-    val darkMode get() = t("Тёмная", "Dark")
-    val hue get() = t("Оттенок", "Hue")
-    val sat get() = t("Насыщенность", "Saturation")
+    val themeDark get() = t("Тёмная", "Dark")
+    val themeLight get() = t("Светлая", "Light")
     val language get() = t("Язык", "Language")
     val angles get() = t("Углы", "Angles")
     val degrees get() = t("Градусы", "Degrees")
