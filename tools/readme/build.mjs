@@ -22,7 +22,7 @@ const T = (s) => { allText += s; return esc(s); };
 const style = (fg, fm) => `<style>
 @font-face{font-family:"G";src:url(data:font/woff2;base64,${fg}) format("woff2");font-weight:100 900}
 @font-face{font-family:"M";src:url(data:font/woff2;base64,${fm}) format("woff2");font-weight:100 900}
-text{font-family:"G","Segoe UI",system-ui,sans-serif;fill:#fff}
+text{font-family:"G","Segoe UI",system-ui,sans-serif}
 .m{font-family:"M",ui-monospace,Consolas,monospace}
 .r{animation:rise .8s cubic-bezier(.2,.8,.2,1) backwards}
 .glow{animation:drift 14s ease-in-out infinite}
@@ -56,7 +56,7 @@ const frame = (w, h) => `<g clip-path="url(#clip)"><rect width="${w}" height="${
 <rect x=".5" y=".5" width="${w - 1}" height="${h - 1}" rx="24" fill="none" stroke="#242424"/>`;
 
 const svg = (w, h, label, body) => (fg, fm) =>
-  `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(label)}">\n${style(fg, fm)}\n${defs(w, h)}\n${frame(w, h)}\n${body}\n</svg>\n`;
+  `<svg xmlns="http://www.w3.org/2000/svg" fill="#fff" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" role="img" aria-label="${esc(label)}">\n${style(fg, fm)}\n${defs(w, h)}\n${frame(w, h)}\n${body}\n</svg>\n`;
 
 const spans = (parts) => parts.map(([s, hi]) => `<tspan${hi ? ' fill="url(#tg)"' : ''}>${T(s)}</tspan>`).join('');
 // «обычный *акцент* обычный» → акцент заливается градиентом
@@ -91,7 +91,7 @@ const sectionHead = (label, parts) => {
 const CALC = {
   dark: { bg: '#0B0B0B', edge: '#2e2e2e', ink: '#F2F2F2', dim: '#8A8A8A', ghost: '#1C1C1C', accent: '#FF7A1A', eqInk: '#140A00', pulse: '#fff',
     kinds: { d: ['#1C1C1C', '#EDEDED'], o: ['#2A1A0D', '#FF7A1A'], c: ['#1C1C1C', '#EF5A5F'], x: ['#1C1C1C', '#EDEDED'], e: ['#FF7A1A', '#140A00'] } },
-  light: { bg: '#F6F6F6', edge: '#DADADA', ink: '#141414', dim: '#7A7A7A', ghost: '#E4E4E4', accent: '#FF7A1A', eqInk: '#140A00', pulse: '#000',
+  light: { bg: '#F6F6F6', edge: '#DADADA', keyStroke: '#E0E0E0', ink: '#141414', dim: '#7A7A7A', ghost: '#E4E4E4', accent: '#FF7A1A', eqInk: '#140A00', pulse: '#000',
     kinds: { d: ['#FFFFFF', '#141414'], o: ['#FFE8D5', '#C85400'], c: ['#FFFFFF', '#D33A3F'], x: ['#FFFFFF', '#141414'], e: ['#FF7A1A', '#140A00'] } },
 };
 const KEYS = [
@@ -111,7 +111,7 @@ function phoneCalc(x, y, p, k = 1) {
   KEYS.forEach((row, r) => row.forEach(([label, kind], c) => {
     const cx = x0 + c * (d + gap) + d / 2, cy = y0 + r * (d + gap) + d / 2;
     const [fill, ink] = p.kinds[kind];
-    s += `<circle cx="${cx}" cy="${cy}" r="${d / 2}" fill="${fill}"/>`;
+    s += `<circle cx="${cx}" cy="${cy}" r="${d / 2}" fill="${fill}"${p.keyStroke ? ` stroke="${p.keyStroke}"` : ''}/>`;
     if (kind === 'e') s += `<circle class="pulse" cx="${cx}" cy="${cy}" r="${d / 2}" fill="${p.pulse}"/>`;
     if (label === '⌫') s += `<path d="M${cx + 5} ${cy - 4.5}h-7.5l-4 4.5 4 4.5h7.5z M${cx - 1} ${cy - 2.2}l3.4 4.4m0 -4.4l-3.4 4.4" fill="none" stroke="${ink}" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>`;
     else s += `<text class="m" x="${cx}" y="${cy + 4.3}" text-anchor="middle" font-size="12.5" font-weight="500" fill="${ink}">${T(label)}</text>`;
