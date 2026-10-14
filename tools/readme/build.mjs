@@ -89,10 +89,10 @@ const sectionHead = (label, parts) => {
 // ---------- телефон-калькулятор (как экран приложения) ----------
 // Палитры — значения OktoPalette / OktoLightPalette из Theme.kt.
 const CALC = {
-  dark: { bg: '#141414', edge: '#2e2e2e', well: '#0A0A0A', wellEdge: '#1F1F1F', wellInk: '#F2F2F2', dim: '#8A8A8A', ghost: '#1C1C1C', keyEdge: '#070707',
-    kinds: { d: ['#262626', '#EDEDED'], o: ['#262626', '#EDEDED'], c: ['#262626', '#EF5A5F'], x: ['#262626', '#EDEDED'], e: ['#EDEDED', '#141414'] } },
-  light: { bg: '#F6F6F6', edge: '#DADADA', well: '#EAEAEA', wellEdge: '#D6D6D6', wellInk: '#141414', dim: '#7A7A7A', ghost: '#DADADA', keyEdge: '#C4C4C4',
-    kinds: { d: ['#FFFFFF', '#141414'], o: ['#FFFFFF', '#141414'], c: ['#FFFFFF', '#D33A3F'], x: ['#FFFFFF', '#141414'], e: ['#141414', '#F6F6F6'] } },
+  dark: { bg: '#0B0B0B', edge: '#2e2e2e', ink: '#F2F2F2', dim: '#8A8A8A', ghost: '#1C1C1C', accent: '#FF7A1A', eqInk: '#140A00', pulse: '#fff',
+    kinds: { d: ['#1C1C1C', '#EDEDED'], o: ['#2A1A0D', '#FF7A1A'], c: ['#1C1C1C', '#EF5A5F'], x: ['#1C1C1C', '#EDEDED'], e: ['#FF7A1A', '#140A00'] } },
+  light: { bg: '#F6F6F6', edge: '#DADADA', ink: '#141414', dim: '#7A7A7A', ghost: '#E4E4E4', accent: '#FF7A1A', eqInk: '#140A00', pulse: '#000',
+    kinds: { d: ['#FFFFFF', '#141414'], o: ['#FFE8D5', '#C85400'], c: ['#FFFFFF', '#D33A3F'], x: ['#FFFFFF', '#141414'], e: ['#FF7A1A', '#140A00'] } },
 };
 const KEYS = [
   [['AC', 'c'], ['()', 'o'], ['%', 'o'], ['÷', 'o']],
@@ -103,20 +103,18 @@ const KEYS = [
 ];
 function phoneCalc(x, y, p, k = 1) {
   let s = `<rect width="150" height="228" rx="20" fill="${p.bg}" stroke="${p.edge}"/>`;
-  s += `<rect x="10" y="12" width="130" height="64" rx="10" fill="${p.well}" stroke="${p.wellEdge}"/>`;
-  for (const cx of [17, 40, 92, 114]) s += `<rect x="${cx}" y="19" width="${cx < 60 ? 20 : 19}" height="9" rx="3" fill="${p.ghost}"/>`;
-  s += `<text class="m" x="127" y="54" text-anchor="end" font-size="16" font-weight="500" fill="${p.wellInk}">${T('128 × 6')}</text>`;
-  s += `<rect class="blink" x="130" y="42" width="1.6" height="14" fill="${p.wellInk}"/>`;
-  s += `<text class="m" x="132" y="69" text-anchor="end" font-size="10" fill="${p.dim}">${T('768')}</text>`;
-  const w = 29.5, h = 22, gap = 4;
+  for (const cx of [14, 38, 100, 122]) s += `<rect x="${cx}" y="13" width="${cx < 60 ? 20 : 19}" height="8" rx="3" fill="${p.ghost}"/>`;
+  s += `<text class="m" x="132" y="50" text-anchor="end" font-size="26" font-weight="400" letter-spacing="-1" fill="${p.ink}">${T('128 × 6')}</text>`;
+  s += `<rect class="blink" x="135" y="30" width="1.6" height="22" fill="${p.accent}"/>`;
+  s += `<text class="m" x="134" y="64" text-anchor="end" font-size="10" fill="${p.dim}">${T('768')}</text>`;
+  const d = 26, gap = 4.7, x0 = (150 - (4 * d + 3 * gap)) / 2, y0 = 72;
   KEYS.forEach((row, r) => row.forEach(([label, kind], c) => {
-    const kx = 10 + c * (w + gap), ky = 86 + r * (h + gap);
+    const cx = x0 + c * (d + gap) + d / 2, cy = y0 + r * (d + gap) + d / 2;
     const [fill, ink] = p.kinds[kind];
-    s += `<rect x="${kx}" y="${ky}" width="${w}" height="${h}" rx="6" fill="${p.keyEdge}"/><rect x="${kx}" y="${ky}" width="${w}" height="${h - 2}" rx="6" fill="${fill}"/>`;
-    const cx = kx + w / 2, cy = ky + (h - 2) / 2;
-    if (kind === 'e') s += `<rect class="pulse" x="${kx}" y="${ky}" width="${w}" height="${h - 2}" rx="6" fill="${p.wellInk === '#141414' ? '#fff' : '#000'}"/>`;
-    if (label === '⌫') s += `<path d="M${cx + 4} ${cy - 4}h-6.5l-3.5 4 3.5 4h6.5z M${cx - 1} ${cy - 2}l3 4m0 -4l-3 4" fill="none" stroke="${ink}" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>`;
-    else s += `<text class="m" x="${cx}" y="${cy + 4}" text-anchor="middle" font-size="12" font-weight="600" fill="${ink}">${T(label)}</text>`;
+    s += `<circle cx="${cx}" cy="${cy}" r="${d / 2}" fill="${fill}"/>`;
+    if (kind === 'e') s += `<circle class="pulse" cx="${cx}" cy="${cy}" r="${d / 2}" fill="${p.pulse}"/>`;
+    if (label === '⌫') s += `<path d="M${cx + 5} ${cy - 4.5}h-7.5l-4 4.5 4 4.5h7.5z M${cx - 1} ${cy - 2.2}l3.4 4.4m0 -4.4l-3.4 4.4" fill="none" stroke="${ink}" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>`;
+    else s += `<text class="m" x="${cx}" y="${cy + 4.3}" text-anchor="middle" font-size="12.5" font-weight="500" fill="${ink}">${T(label)}</text>`;
   }));
   return `<g transform="translate(${x} ${y}) scale(${k})">${s}</g>`;
 }
@@ -127,7 +125,7 @@ function hero(t) {
   let b = '';
   b += `<g class="r"><rect x="40" y="38" width="32" height="32" rx="9" fill="#0E0E0E" stroke="#3a3a3a"/>
 <rect x="46" y="44" width="20" height="8" rx="2.5" fill="#262626"/><rect x="58" y="46" width="6" height="4" rx="1" fill="#fff"/>
-<rect x="46" y="56" width="5" height="5" rx="1.5" fill="#444"/><rect x="53" y="56" width="5" height="5" rx="1.5" fill="#444"/><rect x="60" y="56" width="6" height="8" rx="1.5" fill="#FF7A1A"/>
+<circle cx="49" cy="60" r="2.8" fill="#444"/><circle cx="56" cy="60" r="2.8" fill="#444"/><circle cx="63" cy="60" r="2.8" fill="#FF7A1A"/>
 <text x="84" y="61" font-size="22" font-weight="800" letter-spacing="-.3">${T('Okto Calc')}</text></g>`;
   const v = chip(222, 39, 'v' + VERSION);
   b += `<g class="r" ${delay(1)}>${v.s}</g>`;

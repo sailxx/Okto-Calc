@@ -44,10 +44,10 @@ The result is shown under the expression while you type. A long press on the dis
 <details>
 <summary><b>Appearance</b></summary>
 
-Settings open with the “Settings” button on the display. Both themes use the [Okto](https://sailxx.github.io/Okto/) layout: a sunken display, keys with a lower edge and an upper highlight, Golos Text and JetBrains Mono fonts.
+Settings open with the “Settings” button on the display. Both themes use the [Okto](https://sailxx.github.io/Okto/) layout: round keys, a frameless display with large digits, Golos Text and JetBrains Mono fonts. The accent is the orange from the app icon: the equals key and the operator signs. A pressed round key squeezes into a rounded square.
 
 - **Dark** — graphite background, light digits.
-- **Light** — the same layout on a light background.
+- **Light** — the same layout on a light background; the operator orange is darkened for legibility.
 
 </details>
 

@@ -11,9 +11,7 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.horizontalScroll
@@ -57,8 +55,8 @@ private const val GROUP_SEP = " "
 @Composable
 fun Chip(text: String, modifier: Modifier = Modifier, active: Boolean = false, onClick: () -> Unit) {
     val c = C
-    val bg = if (active) c.wellInk else c.wellGhost
-    val fg = if (active) c.well else c.wellDim
+    val bg = if (active) c.primary else c.wellGhost
+    val fg = if (active) c.onPrimary else c.wellDim
     Box(
         modifier
             .clip(RoundedCornerShape(8.dp))
@@ -101,7 +99,7 @@ private fun DisplayLine(text: String, size: Float, color: androidx.compose.ui.gr
 }
 
 private fun bigSize(len: Int): Float = when {
-    len <= 8 -> 54f; len <= 11 -> 42f; len <= 15 -> 33f; else -> 26f
+    len <= 7 -> 66f; len <= 10 -> 52f; len <= 14 -> 40f; else -> 30f
 }
 
 @Composable
@@ -118,8 +116,7 @@ fun Display(
 ) {
     val c = C
     val ctx = LocalContext.current
-    val shape = RoundedCornerShape(20.dp)
-    val small = 17f
+    val small = 19f
 
     val main: String
     val mainBig: Boolean
@@ -143,9 +140,6 @@ fun Display(
 
     Column(
         modifier
-            .clip(shape)
-            .background(c.well)
-            .border(BorderStroke(1.dp, c.wellEdge), shape)
             .pointerInput(state.expr, state.evaluated) {
                 detectTapGestures(onLongPress = {
                     val text = if (state.evaluated) state.expr else state.preview ?: state.expr
@@ -156,7 +150,7 @@ fun Display(
                     }
                 })
             }
-            .padding(horizontal = 18.dp, vertical = 14.dp),
+            .padding(horizontal = 6.dp, vertical = 4.dp),
     ) {
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalAlignment = Alignment.CenterVertically) {
             Chip(if (state.deg) s.deg else s.rad, onClick = onToggleDeg)
@@ -259,13 +253,16 @@ fun CalcScreen(
         } else {
             Column(verticalArrangement = Arrangement.spacedBy(gap)) {
                 Display(state, s, sciOpen, true, { sciOpen = !sciOpen }, onToggleDeg, onHistory, onSettings,
-                    Modifier.fillMaxWidth().weight(0.8f))
+                    Modifier.fillMaxWidth().weight(1f))
                 AnimatedVisibility(sciOpen, enter = expandVertically() + fadeIn(), exit = shrinkVertically() + fadeOut()) {
                     Column(Modifier.fillMaxWidth().height(46.dp * 3 + 8.dp * 2), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                         for (row in sci.chunked(5)) KeyRow(row, 8.dp, state, s, handle, Modifier.weight(1f).fillMaxWidth())
                     }
                 }
-                MainPad(state, s, gap, onKey, Modifier.fillMaxWidth().weight(1.55f))
+                // Клавиши квадратные (круглые), пока хватает высоты; на низких экранах сплющиваются в овалы.
+                val side = (this@BoxWithConstraints.maxWidth - gap * 3) / 4
+                val padHeight = minOf(side * 5 + gap * 4, this@BoxWithConstraints.maxHeight * 0.64f)
+                MainPad(state, s, gap, onKey, Modifier.fillMaxWidth().height(padHeight))
             }
         }
     }

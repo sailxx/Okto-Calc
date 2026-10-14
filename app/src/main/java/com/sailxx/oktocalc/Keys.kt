@@ -1,13 +1,11 @@
 package com.sailxx.oktocalc
 
-import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -20,9 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
@@ -42,12 +38,12 @@ enum class KeyKind { DIGIT, OP, SCI, EQ, CLEAR, DEL }
 
 private fun colorsFor(kind: KeyKind, c: Palette): Pair<Color, Color> = when (kind) {
     KeyKind.DIGIT, KeyKind.SCI, KeyKind.DEL -> c.key to c.keyInk
-    KeyKind.OP -> c.key to c.primary
+    KeyKind.OP -> c.opKey to c.opInk
     KeyKind.EQ -> c.primary to c.onPrimary
     KeyKind.CLEAR -> c.key to c.danger
 }
 
-/** Объёмная клавиша Okto: тёмная кромка снизу и тонкий блик сверху; при нажатии вдавливается. */
+/** Круглая клавиша: при нажатии круг «сжимается» в скруглённый квадрат. */
 @Composable
 fun CalcKey(
     label: String,
@@ -69,11 +65,8 @@ fun CalcKey(
     val bg = if (active) c.primary else bg0
     val fg = if (active) c.onPrimary else fg0
 
-    val rad by animateDpAsState(
-        if (pressed) (if (small) 8.dp else 12.dp) else (if (small) 14.dp else 22.dp), tween(100), label = "rad",
-    )
-    val edge by animateDpAsState(if (pressed) 0.dp else 3.dp, tween(80), label = "edge")
-    val shape = RoundedCornerShape(rad)
+    val pct by animateIntAsState(if (pressed) 32 else 50, tween(110), label = "pct")
+    val shape = RoundedCornerShape(pct)
 
     val gestures = Modifier
         .semantics {
@@ -95,22 +88,12 @@ fun CalcKey(
             color = fg,
             fontFamily = JbMono,
             fontWeight = FontWeight.Medium,
-            fontSize = if (small) 13.sp else 26.sp,
+            fontSize = if (small) 13.sp else 28.sp,
             maxLines = 1,
         )
     }
 
-    Box(modifier.clip(shape).background(c.keyEdge).then(gestures)) {
-        Box(
-            Modifier
-                .fillMaxSize()
-                .padding(bottom = edge)
-                .clip(shape)
-                .background(bg)
-                .drawBehind { drawRect(c.keyHi, size = Size(size.width, 1.dp.toPx())) },
-            contentAlignment = Alignment.Center,
-        ) { content() }
-    }
+    Box(modifier.clip(shape).background(bg).then(gestures), contentAlignment = Alignment.Center) { content() }
 }
 
 @Composable

@@ -82,10 +82,10 @@ data class Palette(
     val primary: Color, val onPrimary: Color,
     val container: Color, val onContainer: Color,
     val accent2: Color, val onAccent2: Color,
-    /** «Колодец» — табло. */
-    val well: Color, val wellInk: Color, val wellDim: Color, val wellGhost: Color, val wellEdge: Color,
-    /** «Клавиша» Okto: тень снизу и блик сверху. */
-    val key: Color, val keyInk: Color, val keyEdge: Color, val keyHi: Color,
+    /** Табло: цвета цифр и мелких кнопок на нём. */
+    val well: Color, val wellInk: Color, val wellDim: Color, val wellGhost: Color,
+    /** Клавиши: обычная, оператор (заливка и цвет знака). */
+    val key: Color, val keyInk: Color, val opKey: Color, val opInk: Color,
     val danger: Color,
 )
 
@@ -94,29 +94,29 @@ fun hsl(h: Float, s: Float, l: Float, a: Float = 1f): Color {
     return Color(argb).copy(alpha = a)
 }
 
+/** Тёмная: графит и оранжевый акцент из иконки приложения. */
 val OktoPalette = Palette(
     dark = true,
-    bg = Color(0xFF141414), onBg = Color(0xFFEDEDED), muted = Color(0xFF8E8E8E),
-    surface = Color(0xFF1D1D1D), surfaceHi = Color(0xFF262626), outline = Color(0xFF2A2A2A),
-    primary = Color(0xFFEDEDED), onPrimary = Color(0xFF141414),
-    container = Color(0xFF262626), onContainer = Color(0xFFEDEDED),
-    accent2 = Color(0xFF262626), onAccent2 = Color(0xFFEDEDED),
-    well = Color(0xFF0A0A0A), wellInk = Color(0xFFF2F2F2), wellDim = Color(0xFF8A8A8A),
-    wellGhost = Color(0x0FFFFFFF), wellEdge = Color(0xFF1F1F1F),
-    key = Color(0xFF262626), keyInk = Color(0xFFEDEDED), keyEdge = Color(0xFF070707), keyHi = Color(0x12FFFFFF),
+    bg = Color(0xFF0B0B0B), onBg = Color(0xFFEDEDED), muted = Color(0xFF8E8E8E),
+    surface = Color(0xFF141414), surfaceHi = Color(0xFF1C1C1C), outline = Color(0xFF2A2A2A),
+    primary = Color(0xFFFF7A1A), onPrimary = Color(0xFF140A00),
+    container = Color(0xFF1C1C1C), onContainer = Color(0xFFEDEDED),
+    accent2 = Color(0xFF1C1C1C), onAccent2 = Color(0xFFEDEDED),
+    well = Color(0xFF0B0B0B), wellInk = Color(0xFFF2F2F2), wellDim = Color(0xFF8A8A8A), wellGhost = Color(0x14FFFFFF),
+    key = Color(0xFF1C1C1C), keyInk = Color(0xFFEDEDED), opKey = Color(0xFF2A1A0D), opInk = Color(0xFFFF7A1A),
     danger = Color(0xFFEF5A5F),
 )
 
+/** Светлая: та же раскладка, оранжевый затемнён до читаемого на белом. */
 val OktoLightPalette = Palette(
     dark = false,
     bg = Color(0xFFF6F6F6), onBg = Color(0xFF141414), muted = Color(0xFF6B6B6B),
     surface = Color.White, surfaceHi = Color(0xFFEBEBEB), outline = Color(0xFFDADADA),
-    primary = Color(0xFF141414), onPrimary = Color(0xFFF6F6F6),
+    primary = Color(0xFFFF7A1A), onPrimary = Color(0xFF140A00),
     container = Color(0xFFEBEBEB), onContainer = Color(0xFF141414),
     accent2 = Color(0xFFEBEBEB), onAccent2 = Color(0xFF141414),
-    well = Color(0xFFEAEAEA), wellInk = Color(0xFF141414), wellDim = Color(0xFF7A7A7A),
-    wellGhost = Color(0x0F000000), wellEdge = Color(0xFFD6D6D6),
-    key = Color.White, keyInk = Color(0xFF141414), keyEdge = Color(0xFFC4C4C4), keyHi = Color(0xCCFFFFFF),
+    well = Color(0xFFF6F6F6), wellInk = Color(0xFF141414), wellDim = Color(0xFF7A7A7A), wellGhost = Color(0x0F000000),
+    key = Color.White, keyInk = Color(0xFF141414), opKey = Color(0xFFFFE8D5), opInk = Color(0xFFC85400),
     danger = Color(0xFFD33A3F),
 )
 
