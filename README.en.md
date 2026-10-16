@@ -6,7 +6,7 @@
 
 <img src="assets/readme/hero-en.svg" width="100%" alt="Okto Calc — an Android calculator in the Okto style with Google Calculator features">
 
-<a href="https://github.com/sailxx/Okto-Calc/releases/latest/download/OktoCalc.apk"><img src="assets/readme/btn-android-en.svg" height="52" alt="Download for Android"></a>&nbsp;&nbsp;<a href="https://github.com/sailxx/Okto-Calc/releases/latest"><img src="assets/readme/btn-new-en.svg" height="52" alt="What’s new"></a>
+<a href="https://github.com/sailxx/Okto-Calculator/releases/latest/download/OktoCalc.apk"><img src="assets/readme/btn-android-en.svg" height="52" alt="Download for Android"></a>&nbsp;&nbsp;<a href="https://github.com/sailxx/Okto-Calculator/releases/latest"><img src="assets/readme/btn-new-en.svg" height="52" alt="What’s new"></a>
 
 **Okto Calc is an Android calculator with the feature set of Google Calculator.** Percent, brackets, a scientific mode and calculation history; dark and light themes in the style of [Okto](https://github.com/sailxx/Okto). It works offline, requests no permissions and contains no ads.
 
@@ -58,7 +58,7 @@ Settings open with the “Settings” button on the display. Both themes use the
 <details>
 <summary><b>Installation</b></summary>
 
-1. Download [`OktoCalc.apk`](https://github.com/sailxx/Okto-Calc/releases/latest/download/OktoCalc.apk).
+1. Download [`OktoCalc.apk`](https://github.com/sailxx/Okto-Calculator/releases/latest/download/OktoCalc.apk).
 2. Open the file on your phone and allow installation from unknown sources.
 3. Android 8.0 or newer is required.
 
