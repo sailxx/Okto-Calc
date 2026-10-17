@@ -7,6 +7,7 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -40,7 +41,7 @@ private fun App(store: SettingsStore) {
     var settings by remember { mutableStateOf(store.load()) }
     val state = remember { CalcState(ctx) }
     var screen by rememberSaveable { mutableStateOf(Screen.CALC) }
-    val theme = buildTheme(settings)
+    val theme = buildTheme(settings, isSystemInDarkTheme())
     val s = remember(settings.lang) { Strings(settings.lang) }
     val view = LocalView.current
 

@@ -34,7 +34,7 @@ val JbMono = variable(R.font.jbmono, 400, 500, 600, 700, 800)
 // ---------- Настройки ----------
 
 /** Какая тема выбрана. */
-enum class ThemeKind { OKTO, OKTO_LIGHT }
+enum class ThemeKind { SYSTEM, OKTO, OKTO_LIGHT }
 
 enum class Lang {
     RU, EN;
@@ -45,7 +45,7 @@ enum class Lang {
 }
 
 data class Settings(
-    val kind: ThemeKind = ThemeKind.OKTO,
+    val kind: ThemeKind = ThemeKind.SYSTEM,
     val lang: Lang = Lang.system(),
     val deg: Boolean = true,
     val haptics: Boolean = true,
@@ -55,7 +55,7 @@ class SettingsStore(context: Context) {
     private val prefs = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
 
     fun load() = Settings(
-        kind = enumOr(prefs.getString("kind", null), ThemeKind.OKTO),
+        kind = enumOr(prefs.getString("kind", null), ThemeKind.SYSTEM),
         lang = enumOr(prefs.getString("lang", null), Lang.system()),
         deg = prefs.getBoolean("deg", true),
         haptics = prefs.getBoolean("haptics", true),
@@ -132,7 +132,14 @@ val LocalAppTheme = staticCompositionLocalOf { AppTheme(OktoPalette) }
 val C: Palette
     @Composable @ReadOnlyComposable get() = LocalAppTheme.current.c
 
-fun buildTheme(s: Settings): AppTheme = AppTheme(if (s.kind == ThemeKind.OKTO) OktoPalette else OktoLightPalette)
+/** [systemDark] — тёмная ли сейчас тема Android; учитывается только для [ThemeKind.SYSTEM]. */
+fun buildTheme(s: Settings, systemDark: Boolean): AppTheme = AppTheme(
+    when (s.kind) {
+        ThemeKind.SYSTEM -> if (systemDark) OktoPalette else OktoLightPalette
+        ThemeKind.OKTO -> OktoPalette
+        ThemeKind.OKTO_LIGHT -> OktoLightPalette
+    }
+)
 
 @Composable
 fun OktoTheme(theme: AppTheme, content: @Composable () -> Unit) {
@@ -165,6 +172,7 @@ class Strings(val lang: Lang) {
     val errFormat get() = t("Ошибка формата", "Format error")
     val errDomain get() = t("Недопустимое значение", "Invalid input")
     val theme get() = t("Тема", "Theme")
+    val themeSystem get() = t("Системная", "System")
     val themeDark get() = t("Тёмная", "Dark")
     val themeLight get() = t("Светлая", "Light")
     val language get() = t("Язык", "Language")

@@ -64,7 +64,7 @@ private fun PanelChip(text: String, onClick: () -> Unit, selected: Boolean = fal
             .background(bg)
             .then(if (!selected) Modifier.border(BorderStroke(1.dp, c.outline), shape) else Modifier)
             .clickable(onClick = onClick)
-            .padding(horizontal = 16.dp, vertical = 10.dp),
+            .padding(horizontal = 8.dp, vertical = 10.dp),
         contentAlignment = Alignment.Center,
     ) {
         Text(
@@ -115,6 +115,13 @@ private fun Row2(a: @Composable (Modifier) -> Unit, b: @Composable (Modifier) ->
 }
 
 @Composable
+private fun Row3(a: @Composable (Modifier) -> Unit, b: @Composable (Modifier) -> Unit, c: @Composable (Modifier) -> Unit) {
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        a(Modifier.weight(1f)); b(Modifier.weight(1f)); c(Modifier.weight(1f))
+    }
+}
+
+@Composable
 fun HistoryScreen(state: CalcState, s: Strings, onBack: () -> Unit) {
     val c = C
     Column(Modifier.fillMaxSize().padding(Pad)) {
@@ -151,7 +158,8 @@ fun SettingsScreen(settings: Settings, s: Strings, onChange: (Settings) -> Unit,
         Header(s.settings, s.back, onBack)
         Column(Modifier.verticalScroll(rememberScrollState())) {
             Caption(s.theme)
-            Row2(
+            Row3(
+                { PanelChip(s.themeSystem, { onChange(settings.copy(kind = ThemeKind.SYSTEM)) }, settings.kind == ThemeKind.SYSTEM, it) },
                 { PanelChip(s.themeDark, { onChange(settings.copy(kind = ThemeKind.OKTO)) }, settings.kind == ThemeKind.OKTO, it) },
                 { PanelChip(s.themeLight, { onChange(settings.copy(kind = ThemeKind.OKTO_LIGHT)) }, settings.kind == ThemeKind.OKTO_LIGHT, it) },
             )
