@@ -1,14 +1,12 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp" android:height="108dp"
     android:viewportWidth="108" android:viewportHeight="108">
-    <!-- Всё внутри круга радиусом 30 от центра: безопасная зона адаптивной иконки (66dp) -->
-    <!-- Табло -->
-    <path android:fillColor="#262626"
-        android:pathData="M38,32h32a4,4 0,0 1,4 4v8a4,4 0,0 1,-4 4h-32a4,4 0,0 1,-4 -4v-8a4,4 0,0 1,4 -4z"/>
-    <path android:fillColor="#F2F2F2" android:pathData="M58,37h10v6h-10z"/>
-    <!-- Круглые клавиши -->
-    <path android:fillColor="#3A3A3A"
-        android:pathData="M41,59m-5.5,0a5.5,5.5 0,1 1,11 0a5.5,5.5 0,1 1,-11 0M54,59m-5.5,0a5.5,5.5 0,1 1,11 0a5.5,5.5 0,1 1,-11 0M41,72m-5.5,0a5.5,5.5 0,1 1,11 0a5.5,5.5 0,1 1,-11 0M54,72m-5.5,0a5.5,5.5 0,1 1,11 0a5.5,5.5 0,1 1,-11 0"/>
-    <path android:fillColor="#FF7A1A"
-        android:pathData="M67,59m-5.5,0a5.5,5.5 0,1 1,11 0a5.5,5.5 0,1 1,-11 0M67,72m-5.5,0a5.5,5.5 0,1 1,11 0a5.5,5.5 0,1 1,-11 0"/>
+    <!-- Клавиши 2×2: плюс, минус, умножить и оранжевое «равно». Всё внутри круга радиусом 30 от центра -->
+    <path android:fillColor="#2A2A2A"
+        android:pathData="M33,43a10,10 0,1 1,20,0a10,10 0,1 1,-20,0zM55,43a10,10 0,1 1,20,0a10,10 0,1 1,-20,0zM33,65a10,10 0,1 1,20,0a10,10 0,1 1,-20,0z"/>
+    <path android:fillColor="#FF7A1A" android:pathData="M55,65a10,10 0,1 1,20,0a10,10 0,1 1,-20,0z"/>
+    <path android:strokeColor="#F2F2F2" android:strokeWidth="2.6" android:strokeLineCap="round"
+        android:pathData="M38.5,43h9M43,38.5v9M60.5,43h9M39.8,61.8l6.4,6.4M46.2,61.8l-6.4,6.4"/>
+    <path android:fillColor="#140A00"
+        android:pathData="M61.7,61.1h6.6a1.2,1.2 0,0 1,0 2.4h-6.6a1.2,1.2 0,0 1,0 -2.4zM61.7,66.5h6.6a1.2,1.2 0,0 1,0 2.4h-6.6a1.2,1.2 0,0 1,0 -2.4z"/>
 </vector>

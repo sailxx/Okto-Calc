@@ -124,8 +124,8 @@ function hero(t) {
   const W = 880, H = 480;
   let b = '';
   b += `<g class="r"><rect x="40" y="38" width="32" height="32" rx="9" fill="#0E0E0E" stroke="#3a3a3a"/>
-<rect x="46" y="44" width="20" height="8" rx="2.5" fill="#262626"/><rect x="58" y="46" width="6" height="4" rx="1" fill="#fff"/>
-<circle cx="49" cy="60" r="2.8" fill="#444"/><circle cx="56" cy="60" r="2.8" fill="#444"/><circle cx="63" cy="60" r="2.8" fill="#FF7A1A"/>
+<g transform="translate(29 27) scale(0.5)"><circle cx="43" cy="43" r="10" fill="#2A2A2A"/><circle cx="65" cy="43" r="10" fill="#2A2A2A"/><circle cx="43" cy="65" r="10" fill="#2A2A2A"/><circle cx="65" cy="65" r="10" fill="#FF7A1A"/>
+<path d="M38.5 43h9M43 38.5v9M60.5 43h9M39.8 61.8l6.4 6.4M46.2 61.8l-6.4 6.4" fill="none" stroke="#F2F2F2" stroke-width="2.6" stroke-linecap="round"/><path d="M61.7 62.3h6.6M61.7 67.7h6.6" stroke="#140A00" stroke-width="2.4" stroke-linecap="round"/></g>
 <text x="84" y="61" font-size="22" font-weight="800" letter-spacing="-.3">${T('Okto Calc')}</text></g>`;
   const v = chip(222, 39, 'v' + VERSION);
   b += `<g class="r" ${delay(1)}>${v.s}</g>`;
